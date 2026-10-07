@@ -1,0 +1,33 @@
+{
+  "id": "00000000-0000-0000-0000-000000000001",
+  "platform_name": "StockIN",
+  "platform_status": "operational",
+  "maintenance_mode": false,
+  "maintenance_message": "StockIN is undergoing emergency scheduled maintenance.",
+  "allow_new_registrations": true,
+  "allow_business_registration": true,
+  "allow_user_login": true,
+  "allow_user_access": true,
+  "max_file_upload_size_mb": 10,
+  "max_storage_per_business_mb": 500,
+  "max_storage_per_user_mb": 100,
+  "notifications_enabled": true,
+  "email_notifications_enabled": false,
+  "system_alert_enabled": false,
+  "system_alert_message": "Global Maintenance Alert Test",
+  "system_alert_severity": "warning",
+  "system_alert_start_time": null,
+  "system_alert_end_time": null,
+  "feature_flags": {
+    "inventory": true,
+    "quotations": true,
+    "invoices": true,
+    "payments": true,
+    "reports": true,
+    "history": true,
+    "export": true
+  },
+  "session_timeout_minutes": 120,
+  "updated_at": "2026-10-06T16:56:08.503Z",
+  "updated_by": "889f4a0b-ac07-442d-8ef4-42ec14aa485d"
+}

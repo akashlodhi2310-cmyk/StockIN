@@ -1,0 +1,73 @@
+[
+  {
+    "id": "audit_1791307075225_xzvrgyd",
+    "created_at": "2026-10-06T17:17:55.225Z",
+    "admin_id": "889f4a0b-ac07-442d-8ef4-42ec14aa485d",
+    "admin_email": "lodhi@gmail.com",
+    "action": "ANNOUNCEMENT_DELETED",
+    "target_type": "announcement",
+    "target_id": "ann_1791305767236_o8y4fgo",
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791305768706_vsiyh9a",
+    "created_at": "2026-10-06T16:56:08.706Z",
+    "admin_id": "889f4a0b-ac07-442d-8ef4-42ec14aa485d",
+    "admin_email": "lodhi@gmail.com",
+    "action": "MAINTENANCE_MODE_DISABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": true,
+      "allow_new_registrations": false,
+      "system_alert_enabled": true
+    },
+    "new_value": {
+      "maintenance_mode": false,
+      "allow_new_registrations": true,
+      "system_alert_enabled": false
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791305767481_ktry8hv",
+    "created_at": "2026-10-06T16:56:07.481Z",
+    "admin_id": "889f4a0b-ac07-442d-8ef4-42ec14aa485d",
+    "admin_email": "lodhi@gmail.com",
+    "action": "ANNOUNCEMENT_CREATED",
+    "target_type": "announcement",
+    "target_id": "ann_1791305767236_o8y4fgo",
+    "new_value": {
+      "title": "Scheduled System Maintenance Tonight",
+      "type": "warning",
+      "target": "all"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791305642572_y31zbgv",
+    "created_at": "2026-10-06T16:54:02.573Z",
+    "admin_id": "889f4a0b-ac07-442d-8ef4-42ec14aa485d",
+    "admin_email": "lodhi@gmail.com",
+    "action": "MAINTENANCE_MODE_ENABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": false,
+      "maintenance_message": "Platform is temporarily under maintenance. Please try again later.",
+      "allow_new_registrations": true,
+      "system_alert_enabled": false,
+      "system_alert_message": "",
+      "system_alert_severity": "info"
+    },
+    "new_value": {
+      "maintenance_mode": true,
+      "maintenance_message": "StockIN is undergoing emergency scheduled maintenance.",
+      "allow_new_registrations": false,
+      "system_alert_enabled": true,
+      "system_alert_message": "Global Maintenance Alert Test",
+      "system_alert_severity": "warning"
+    },
+    "ip_address": "::1"
+  }
+]
