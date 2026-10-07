@@ -162,3 +162,23 @@ export async function updateAdminFeatureFlags(flags: Record<string, boolean>) {
 export async function verifyMasterAdminSession() {
   return request<any>('/admin/auth/verify');
 }
+
+// 11. Plan Payments Verification
+export async function getPlanPayments(status?: string, limit = 50, offset = 0) {
+  const query = new URLSearchParams({ limit: limit.toString(), offset: offset.toString() });
+  if (status) query.append('status', status);
+  return request<any>(`/admin/payments?${query.toString()}`);
+}
+
+export async function approvePlanPayment(paymentId: string) {
+  return request<any>(`/admin/payments/${paymentId}/approve`, {
+    method: 'POST',
+  });
+}
+
+export async function rejectPlanPayment(paymentId: string, reason: string) {
+  return request<any>(`/admin/payments/${paymentId}/reject`, {
+    method: 'POST',
+    body: JSON.stringify({ reason }),
+  });
+}

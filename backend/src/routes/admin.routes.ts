@@ -10,6 +10,7 @@ import { getStorageOverview } from '../services/storageManagement.service';
 import { getAnnouncements, createAnnouncement, toggleAnnouncement, deleteAnnouncement } from '../services/announcements.service';
 import { getAuditLogs } from '../services/auditLog.service';
 import { getLiveDiagnostics } from '../services/systemHealth.service';
+import { listAllPayments, getPaymentById, approvePayment, rejectPayment } from '../services/planPayments.service';
 
 const router = Router();
 
@@ -278,6 +279,73 @@ router.patch('/feature-flags', async (req: AuthenticatedRequest, res: Response) 
     sendSuccess(res, updated.feature_flags);
   } catch (err: any) {
     sendError(res, err.message || 'Failed to update feature flags', 500);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PAYMENT VERIFICATION ROUTES
+// ─────────────────────────────────────────────────────────────────────────────
+
+// GET /api/v1/admin/payments
+router.get('/payments', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const status = req.query.status as string | undefined;
+    const limit = parseInt(req.query.limit as string || '50', 10);
+    const offset = parseInt(req.query.offset as string || '0', 10);
+    const result = await listAllPayments({ status, limit, offset });
+    sendSuccess(res, result);
+  } catch (err: any) {
+    sendError(res, err.message || 'Failed to fetch payments', 500);
+  }
+});
+
+// GET /api/v1/admin/payments/:id
+router.get('/payments/:id', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const payment = await getPaymentById(id);
+    if (!payment) {
+      sendError(res, 'Payment not found', 404);
+      return;
+    }
+    sendSuccess(res, payment);
+  } catch (err: any) {
+    sendError(res, err.message || 'Failed to fetch payment', 500);
+  }
+});
+
+// POST /api/v1/admin/payments/:id/approve
+router.post('/payments/:id/approve', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const payment = await approvePayment(id, {
+      id: req.user?.id,
+      email: req.user?.email,
+      ip: req.ip,
+    });
+    sendSuccess(res, payment);
+  } catch (err: any) {
+    sendError(res, err.message || 'Failed to approve payment', 500);
+  }
+});
+
+// POST /api/v1/admin/payments/:id/reject
+router.post('/payments/:id/reject', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const { reason } = req.body;
+    if (!reason || typeof reason !== 'string') {
+      sendError(res, 'Rejection reason is required', 400);
+      return;
+    }
+    const payment = await rejectPayment(id, reason, {
+      id: req.user?.id,
+      email: req.user?.email,
+      ip: req.ip,
+    });
+    sendSuccess(res, payment);
+  } catch (err: any) {
+    sendError(res, err.message || 'Failed to reject payment', 500);
   }
 });
 

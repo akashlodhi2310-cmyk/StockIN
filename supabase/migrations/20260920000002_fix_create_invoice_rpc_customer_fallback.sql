@@ -359,7 +359,8 @@ BEGIN
       item.product_id,
       SUM(item.quantity)::INTEGER AS total_qty,
       MAX(item.product_name) AS live_name,
-      MAX(item.sku) AS live_sku
+      MAX(item.sku) AS live_sku,
+      0 AS live_min_stock
     FROM jsonb_to_recordset(v_items) AS item(
       product_id TEXT,
       quantity INTEGER,

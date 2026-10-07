@@ -1,5 +1,276 @@
 [
   {
+    "id": "audit_1791395973808_qn5qfdy",
+    "created_at": "2026-10-07T17:59:33.808Z",
+    "admin_id": null,
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PAYMENT_APPROVED",
+    "target_type": "plan_payment",
+    "target_id": "44a2f544-6234-4377-ae90-e73d1043209c",
+    "new_value": {
+      "payment_id": "44a2f544-6234-4377-ae90-e73d1043209c",
+      "user_id": "f20b0f79-8388-4d48-95f1-a083a9dbb8d8",
+      "amount": 499,
+      "status": "approved"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791395973265_yhqiwde",
+    "created_at": "2026-10-07T17:59:33.267Z",
+    "admin_id": null,
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PRO_PLAN_ACTIVATED",
+    "target_type": "subscription",
+    "target_id": "f20b0f79-8388-4d48-95f1-a083a9dbb8d8",
+    "new_value": {
+      "plan": "pro",
+      "status": "active",
+      "activated_at": "2026-10-07T17:59:33.019Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791394273723_chre377",
+    "created_at": "2026-10-07T17:31:13.724Z",
+    "admin_id": null,
+    "admin_email": null,
+    "action": "PAYMENT_SUBMITTED",
+    "target_type": "plan_payment",
+    "target_id": "44a2f544-6234-4377-ae90-e73d1043209c",
+    "new_value": {
+      "user_id": "f20b0f79-8388-4d48-95f1-a083a9dbb8d8",
+      "amount": 499,
+      "utr": "8765757657686856"
+    }
+  },
+  {
+    "id": "audit_1791364367247_win8h8f",
+    "created_at": "2026-10-07T09:12:47.247Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_DISABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T09:11:07.217Z"
+    },
+    "new_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T09:12:20.062Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791364282386_06wkqxq",
+    "created_at": "2026-10-07T09:11:22.387Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_ENABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T08:15:17.382Z"
+    },
+    "new_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T09:11:07.217Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360917657_76o2yij",
+    "created_at": "2026-10-07T08:15:17.657Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_DISABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T08:14:58.913Z"
+    },
+    "new_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T08:15:17.382Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360899423_0gqdlr0",
+    "created_at": "2026-10-07T08:14:59.423Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_ENABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T08:12:22.397Z"
+    },
+    "new_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T08:14:58.913Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360742611_zjy0wkq",
+    "created_at": "2026-10-07T08:12:22.611Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PLATFORM_SETTINGS_UPDATED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "updated_at": "2026-10-07T08:12:08.862Z"
+    },
+    "new_value": {
+      "updated_at": "2026-10-07T08:12:22.397Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360729073_no49lnj",
+    "created_at": "2026-10-07T08:12:09.073Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PLATFORM_SETTINGS_UPDATED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "updated_at": "2026-10-07T08:12:06.266Z"
+    },
+    "new_value": {
+      "updated_at": "2026-10-07T08:12:08.862Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360726482_0xr1dhq",
+    "created_at": "2026-10-07T08:12:06.482Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_DISABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T08:11:52.315Z"
+    },
+    "new_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T08:12:06.266Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360712557_zpek6qb",
+    "created_at": "2026-10-07T08:11:52.557Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PLATFORM_SETTINGS_UPDATED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "platform_status": "operational",
+      "updated_at": "2026-10-07T08:11:26.741Z"
+    },
+    "new_value": {
+      "platform_status": "maintenance",
+      "updated_at": "2026-10-07T08:11:52.315Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360686972_isbwp5x",
+    "created_at": "2026-10-07T08:11:26.972Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_ENABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T08:11:03.064Z"
+    },
+    "new_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T08:11:26.741Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360663287_c5xjx0s",
+    "created_at": "2026-10-07T08:11:03.287Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PLATFORM_SETTINGS_UPDATED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "updated_at": "2026-10-07T08:11:01.781Z"
+    },
+    "new_value": {
+      "updated_at": "2026-10-07T08:11:03.064Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360662031_86wuni1",
+    "created_at": "2026-10-07T08:11:02.031Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "PLATFORM_SETTINGS_UPDATED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "updated_at": "2026-10-07T08:11:00.983Z"
+    },
+    "new_value": {
+      "updated_at": "2026-10-07T08:11:01.781Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360661253_n8kn2k2",
+    "created_at": "2026-10-07T08:11:01.253Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_DISABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T08:10:19.962Z"
+    },
+    "new_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-07T08:11:00.983Z"
+    },
+    "ip_address": "::1"
+  },
+  {
+    "id": "audit_1791360620296_cud6397",
+    "created_at": "2026-10-07T08:10:20.296Z",
+    "admin_id": "00000000-0000-0000-0000-000000000000",
+    "admin_email": "dev-master-admin@stockin.com",
+    "action": "MAINTENANCE_MODE_ENABLED",
+    "target_type": "platform_settings",
+    "target_id": "00000000-0000-0000-0000-000000000001",
+    "old_value": {
+      "maintenance_mode": false,
+      "updated_at": "2026-10-06T16:56:08.503Z"
+    },
+    "new_value": {
+      "maintenance_mode": true,
+      "updated_at": "2026-10-07T08:10:19.962Z"
+    },
+    "ip_address": "::1"
+  },
+  {
     "id": "audit_1791307075225_xzvrgyd",
     "created_at": "2026-10-06T17:17:55.225Z",
     "admin_id": "889f4a0b-ac07-442d-8ef4-42ec14aa485d",

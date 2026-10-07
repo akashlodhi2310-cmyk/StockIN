@@ -63,7 +63,8 @@ export const LoginPage: React.FC = () => {
     try {
       // Check backend login gate
       if (!config.allow_user_login) {
-        const checkRes = await fetch('http://localhost:3001/api/v1/platform/check-login', {
+        const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
+        const checkRes = await fetch(`${API_BASE}/platform/check-login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email.trim() }),

@@ -55,7 +55,7 @@ const handleCheckLogin = async (req: Request, res: Response) => {
     const settings = await getPlatformSettings();
     const email = (req.body?.email || req.query?.email) as string | undefined;
 
-    const adminEmails = (process.env.MASTER_ADMIN_EMAILS || 'lodhi@gmail.com')
+    const adminEmails = (process.env.MASTER_ADMIN_EMAILS || 'lodhi@1122')
       .toLowerCase()
       .split(',')
       .map(e => e.trim());

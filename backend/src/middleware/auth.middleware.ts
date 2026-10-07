@@ -8,7 +8,7 @@ import { createAuditLog } from '../services/auditLog.service';
 import { logger } from '../utils/logger';
 
 export async function isMasterAdmin(userId: string, email?: string): Promise<boolean> {
-  const adminEmails = (process.env.MASTER_ADMIN_EMAILS || 'lodhi@gmail.com')
+  const adminEmails = (process.env.MASTER_ADMIN_EMAILS || 'lodhi@1122')
     .toLowerCase()
     .split(',')
     .map(e => e.trim());
@@ -36,7 +36,7 @@ export async function requireAuth(
   next: NextFunction
 ): Promise<void> {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
     sendError(res, 'Missing or invalid Authorization header', 401);
     return;
   }
@@ -56,8 +56,8 @@ export async function requireAuth(
       role: user.role,
     };
     next();
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Authentication failed';
+  } catch (err: any) {
+    const message = err?.message || 'Authentication failed';
     sendError(res, message, 401);
   }
 }
@@ -67,8 +67,43 @@ export async function requireMasterAdmin(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  // Try real token first if provided
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const supabase = getSupabaseAdmin();
+      const { data, error } = await supabase.auth.getUser(token);
+      const user = data?.user;
+      if (!error && user) {
+        const authorized = await isMasterAdmin(user.id, user.email);
+        if (authorized || (process.env.NODE_ENV !== 'production' && process.env.BYPASS_AUTH !== 'false')) {
+          req.user = {
+            id: user.id,
+            email: user.email,
+            role: 'master_admin',
+          };
+          next();
+          return;
+        }
+      }
+    } catch {}
+  }
+
+  // --- DEV MODE BYPASS ---
+  // User requested to bypass authentication for now because they are building the UI.
+  if (process.env.NODE_ENV !== 'production' && process.env.BYPASS_AUTH !== 'false') {
+    req.user = {
+      id: '00000000-0000-0000-0000-000000000000',
+      email: 'dev-master-admin@stockin.com',
+      role: 'master_admin',
+    };
+    next();
+    return;
+  }
+  // -----------------------
+
+  if (typeof authHeader !== 'string' || !authHeader.startsWith('Bearer ')) {
     sendError(res, 'Master Admin authorization required', 401);
     return;
   }
@@ -76,19 +111,20 @@ export async function requireMasterAdmin(
   const token = authHeader.split(' ')[1];
   try {
     const supabase = getSupabaseAdmin();
-    const { data: { user }, error } = await supabase.auth.getUser(token);
+    const { data, error } = await supabase.auth.getUser(token);
+    const user = data?.user;
 
     if (error || !user) {
       sendError(res, 'Invalid or expired Master Admin token', 401);
       return;
     }
 
-    const authorized = await isMasterAdmin(user.id, user.email);
+    const authorized = await isMasterAdmin(user!.id, user!.email);
     if (!authorized) {
-      logger.warn(`Unauthorized Master Admin access attempt by user ${user.id} (${user.email})`);
+      logger.warn(`Unauthorized Master Admin access attempt by user ${user!.id} (${user!.email})`);
       await createAuditLog({
-        admin_id: user.id,
-        admin_email: user.email || null,
+        admin_id: user!.id,
+        admin_email: user!.email || null,
         action: 'UNAUTHORIZED_ADMIN_ACCESS_ATTEMPT',
         target_type: 'api',
         target_id: req.originalUrl,
@@ -104,13 +140,13 @@ export async function requireMasterAdmin(
     }
 
     req.user = {
-      id: user.id,
-      email: user.email,
+      id: user!.id,
+      email: user!.email,
       role: 'master_admin',
     };
     next();
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Master Admin verification failed';
+  } catch (err: any) {
+    const message = err?.message || 'Master Admin verification failed';
     sendError(res, message, 401);
   }
 }
@@ -128,7 +164,7 @@ export async function enforceMaintenanceMode(
 
   // Check if caller is Master Admin (exempt from maintenance mode)
   const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
+  if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];
     try {
       const supabase = getSupabaseAdmin();
@@ -145,6 +181,7 @@ export async function enforceMaintenanceMode(
     message: settings.maintenance_message || 'Platform is temporarily under maintenance. Please try again later.',
   });
 }
+
 
 // Middleware: Rejects requests from suspended users
 export async function enforceUserSuspension(
@@ -164,3 +201,72 @@ export async function enforceUserSuspension(
   }
   next();
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Middleware: enforceProductLimit
+// Blocks product creation when user is on Free Trial and at product limit.
+// MUST be placed after requireAuth on any product creation route.
+// ─────────────────────────────────────────────────────────────────────────────
+export async function enforceProductLimit(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { canCreateProduct } = await import('../services/subscriptionPlan.service');
+    const userId = req.user?.id;
+    if (!userId) {
+      next();
+      return;
+    }
+    const result = await canCreateProduct(userId);
+    if (!result.allowed) {
+      res.status(403).json({
+        success: false,
+        code: 'PRODUCT_LIMIT_REACHED',
+        message: `Free Trial allows up to ${result.max} products. Upgrade to StockIN Pro to add more.`,
+        data: { used: result.used, max: result.max },
+      });
+      return;
+    }
+    next();
+  } catch (err: any) {
+    // Fail open — never block the user due to an internal error
+    next();
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Middleware: enforceInvoiceLimit
+// Blocks invoice creation when user is on Free Trial and at invoice limit.
+// MUST be placed after requireAuth on any invoice creation route.
+// ─────────────────────────────────────────────────────────────────────────────
+export async function enforceInvoiceLimit(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { canCreateInvoice } = await import('../services/subscriptionPlan.service');
+    const userId = req.user?.id;
+    if (!userId) {
+      next();
+      return;
+    }
+    const result = await canCreateInvoice(userId);
+    if (!result.allowed) {
+      res.status(403).json({
+        success: false,
+        code: 'INVOICE_LIMIT_REACHED',
+        message: `Free Trial allows up to ${result.max} invoices. Upgrade to StockIN Pro to create more.`,
+        data: { used: result.used, max: result.max },
+      });
+      return;
+    }
+    next();
+  } catch (err: any) {
+    // Fail open
+    next();
+  }
+}
+

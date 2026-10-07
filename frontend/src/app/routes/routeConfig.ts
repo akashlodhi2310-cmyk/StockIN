@@ -30,6 +30,9 @@ export const ROUTES = {
 
   // Master Admin Route
   MASTER_ADMIN: '/master-admin',
+
+  // Subscription / Upgrade
+  UPGRADE: '/upgrade',
 } as const;
 
 export type AppRoute = typeof ROUTES[keyof typeof ROUTES];

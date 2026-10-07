@@ -14,8 +14,8 @@ export const MasterAdminLayout: React.FC = () => {
   const [maintenanceModeActive, setMaintenanceModeActive] = useState(false);
 
   // Quick Master Admin login form state if unauthenticated
-  const [loginEmail, setLoginEmail] = useState('lodhi@gmail.com');
-  const [loginPassword, setLoginPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState('lodhi@1122');
+  const [loginPassword, setLoginPassword] = useState('Akash@1122');
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 

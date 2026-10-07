@@ -59,7 +59,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       items: [
         { label: 'Users', path: '/master-admin/users', icon: <Users className="w-4 h-4" /> },
         { label: 'Businesses', path: '/master-admin/businesses', icon: <Building2 className="w-4 h-4" /> },
-        { label: 'Plans & Billing', path: '/master-admin/plans', icon: <CreditCard className="w-4 h-4" /> },
+        { label: 'Payment Verifications', path: '/master-admin/payments', icon: <CreditCard className="w-4 h-4" /> },
+        { label: 'Plans & Billing', path: '/master-admin/plans', icon: <Zap className="w-4 h-4" /> },
       ],
     },
     {

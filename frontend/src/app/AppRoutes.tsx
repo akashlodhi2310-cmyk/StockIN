@@ -30,6 +30,7 @@ import { PaymentsPage } from '@/features/payments/pages/PaymentsPage';
 import { ReportsPage } from '@/features/reports/pages/ReportsPage';
 import { HistoryPage } from '@/features/history/pages/HistoryPage';
 import { SettingsPage } from '@/features/settings/pages/SettingsPage';
+import { UpgradePage } from '@/features/upgrade/pages/UpgradePage';
 
 // Public Landing Page
 import { LandingPage } from '@/features/landing/pages/LandingPage';
@@ -72,6 +73,7 @@ export const AppRoutes: React.FC = () => {
           <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
           <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
           <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+          <Route path={ROUTES.UPGRADE} element={<UpgradePage />} />
         </Route>
       </Route>
 

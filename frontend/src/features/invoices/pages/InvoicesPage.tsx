@@ -7,6 +7,8 @@ import { InvoiceDetailDrawer } from '@/components/invoices/InvoiceDetailDrawer';
 import { PrintableInvoice } from '@/components/invoices/PrintableInvoice';
 import { Modal } from '@/components/common/Modal';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
+import { UpgradeModal } from '@/components/plan/UpgradeModal';
+import { usePlan } from '@/context/PlanContext';
 import { Invoice, PaymentStatus } from '@/types';
 import { formatCurrency, formatDate } from '@/utils/formatters';
 import { exportToCsv } from '@/utils/exportCsv';
@@ -24,6 +26,8 @@ import {
 export const InvoicesPage: React.FC = () => {
   const { invoices, updateInvoiceStatus, deleteInvoice, showToast } = useAppState();
   const navigate = useNavigate();
+  const { canCreateInvoice, planData } = usePlan();
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | PaymentStatus>('all');
@@ -95,7 +99,12 @@ export const InvoicesPage: React.FC = () => {
           </span>
         }
         actions={
-          <>
+          <div className="flex items-center gap-2">
+            {!planData?.usage.isPro && planData?.usage.planName === 'trial' && (
+              <span className="text-xs font-semibold text-slate-500 mr-1 border border-slate-200 bg-white px-2.5 py-1 rounded-lg hidden sm:inline-block">
+                Free Trial &middot; <strong className="text-slate-800">{planData.usage.invoicesUsed}/{planData.usage.maxInvoices}</strong> Invoices
+              </span>
+            )}
             <button
               onClick={handleExportCsv}
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
@@ -104,13 +113,16 @@ export const InvoicesPage: React.FC = () => {
               Export
             </button>
             <button
-              onClick={() => navigate('/billing')}
+              onClick={() => {
+                if (!canCreateInvoice) setIsUpgradeModalOpen(true);
+                else navigate('/billing');
+              }}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-xs transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               New Invoice
             </button>
-          </>
+          </div>
         }
       />
 
@@ -190,7 +202,10 @@ export const InvoicesPage: React.FC = () => {
               Generate your first professional GST-compliant bill in the Billing terminal with automatic stock deduction.
             </p>
             <button
-              onClick={() => navigate('/billing')}
+              onClick={() => {
+                if (!canCreateInvoice) setIsUpgradeModalOpen(true);
+                else navigate('/billing');
+              }}
               className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer min-h-[44px]"
             >
               <Plus className="w-4 h-4" />
@@ -325,7 +340,10 @@ export const InvoicesPage: React.FC = () => {
                       Generate your first professional GST-compliant bill in the Billing terminal with automatic stock deduction and invoice numbering.
                     </p>
                     <button
-                      onClick={() => navigate('/billing')}
+                      onClick={() => {
+                        if (!canCreateInvoice) setIsUpgradeModalOpen(true);
+                        else navigate('/billing');
+                      }}
                       className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
                     >
                       <Plus className="w-4 h-4" />
@@ -479,6 +497,13 @@ export const InvoicesPage: React.FC = () => {
         title="Delete Invoice"
         message="Are you sure you want to delete this invoice record? The client outstanding balance will be adjusted accordingly."
         confirmText="Delete Invoice"
+      />
+
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)}
+        title="Invoice Limit Reached"
+        message={`You've reached your free trial limit of ${planData?.usage.maxInvoices || 5} invoices.`}
       />
     </div>
   );

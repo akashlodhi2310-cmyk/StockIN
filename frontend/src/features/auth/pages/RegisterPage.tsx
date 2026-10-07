@@ -92,7 +92,8 @@ export const RegisterPage: React.FC = () => {
 
     try {
       // Backend policy enforcement check
-      const checkRes = await fetch('http://localhost:3001/api/v1/platform/check-registration', {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1';
+      const checkRes = await fetch(`${API_BASE}/platform/check-registration`, {
         method: 'POST',
       }).then(r => r.json()).catch(() => ({ success: true }));
 

@@ -40,6 +40,12 @@ export const Settings: React.FC = () => {
     system_alert_severity: 'info' as 'info' | 'warning' | 'critical',
     session_timeout_minutes: 120,
     updated_at: '',
+    payment_upi_id: '',
+    payment_qr_code_url: '',
+    pro_price: 999,
+    payment_instructions: '',
+    free_trial_product_limit: 5,
+    free_trial_invoice_limit: 5,
   });
 
   const loadSettings = async () => {
@@ -66,6 +72,12 @@ export const Settings: React.FC = () => {
         system_alert_severity: data.system_alert_severity || 'info',
         session_timeout_minutes: data.session_timeout_minutes || 120,
         updated_at: data.updated_at || '',
+        payment_upi_id: data.payment_upi_id || '',
+        payment_qr_code_url: data.payment_qr_code_url || '',
+        pro_price: data.pro_price ?? 999,
+        payment_instructions: data.payment_instructions || '',
+        free_trial_product_limit: data.free_trial_product_limit ?? 5,
+        free_trial_invoice_limit: data.free_trial_invoice_limit ?? 5,
       });
     } catch (err: any) {
       setError(err.message || 'Failed to load platform settings from server.');
@@ -452,6 +464,72 @@ export const Settings: React.FC = () => {
               className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             />
             <p className="text-xs text-slate-400 mt-1">Automatic JWT refresh window</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Section 5: Subscriptions & Payment Settings */}
+      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-6">
+        <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+          <Globe size={20} className="text-emerald-500" />
+          Subscription & Payment Configuration
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Free Trial: Product Limit</label>
+            <input
+              type="number"
+              value={form.free_trial_product_limit}
+              onChange={(e) => setForm({ ...form, free_trial_product_limit: Number(e.target.value) })}
+              className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Free Trial: Invoice Limit</label>
+            <input
+              type="number"
+              value={form.free_trial_invoice_limit}
+              onChange={(e) => setForm({ ...form, free_trial_invoice_limit: Number(e.target.value) })}
+              className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">StockIN Pro Price (INR)</label>
+            <input
+              type="number"
+              value={form.pro_price}
+              onChange={(e) => setForm({ ...form, pro_price: Number(e.target.value) })}
+              className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Payment UPI ID</label>
+            <input
+              type="text"
+              value={form.payment_upi_id}
+              onChange={(e) => setForm({ ...form, payment_upi_id: e.target.value })}
+              className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">QR Code Image URL</label>
+            <input
+              type="text"
+              value={form.payment_qr_code_url}
+              onChange={(e) => setForm({ ...form, payment_qr_code_url: e.target.value })}
+              placeholder="https://example.com/qr-code.png"
+              className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Payment Instructions</label>
+            <textarea
+              rows={4}
+              value={form.payment_instructions}
+              onChange={(e) => setForm({ ...form, payment_instructions: e.target.value })}
+              className="w-full bg-white border border-slate-300 rounded-lg px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+            />
           </div>
         </div>
       </div>

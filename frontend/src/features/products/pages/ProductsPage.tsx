@@ -6,9 +6,11 @@ import { ProductModal } from '@/components/products/ProductModal';
 import { ProductDetailDrawer } from '@/components/products/ProductDetailDrawer';
 import { StockAdjustModal } from '@/components/stock/StockAdjustModal';
 import { ConfirmDialog } from '@/components/common/ConfirmDialog';
+import { UpgradeModal } from '@/components/plan/UpgradeModal';
 import { Product } from '@/types';
 import { formatCurrency } from '@/utils/formatters';
 import { exportToCsv } from '@/utils/exportCsv';
+import { usePlan } from '@/context/PlanContext';
 import {
   Plus,
   Download,
@@ -42,6 +44,10 @@ export const ProductsPage: React.FC = () => {
   const [adjustingProduct, setAdjustingProduct] = useState<Product | null>(null);
 
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
+
+  // Plan limits
+  const { canCreateProduct, planData } = usePlan();
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   // Extract unique categories and brands
   const categories = useMemo(() => {
@@ -241,7 +247,12 @@ export const ProductsPage: React.FC = () => {
           </span>
         }
         actions={
-          <>
+          <div className="flex items-center gap-2">
+            {!planData?.usage.isPro && planData?.usage.planName === 'trial' && (
+              <span className="text-xs font-semibold text-slate-500 mr-1 border border-slate-200 bg-white px-2.5 py-1 rounded-lg hidden sm:inline-block">
+                Free Trial &middot; <strong className="text-slate-800">{planData.usage.productsUsed}/{planData.usage.maxProducts}</strong> Products
+              </span>
+            )}
             <button
               onClick={handleImportClick}
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
@@ -258,6 +269,10 @@ export const ProductsPage: React.FC = () => {
             </button>
             <button
               onClick={() => {
+                if (!canCreateProduct) {
+                  setIsUpgradeModalOpen(true);
+                  return;
+                }
                 setEditingProduct(null);
                 setIsProductModalOpen(true);
               }}
@@ -266,7 +281,7 @@ export const ProductsPage: React.FC = () => {
               <Plus className="w-4 h-4" />
               Add Product
             </button>
-          </>
+          </div>
         }
       />
 
@@ -715,6 +730,13 @@ export const ProductsPage: React.FC = () => {
         title="Delete Product"
         message="Are you sure you want to delete this product from the inventory catalog? This action cannot be undone."
         confirmText="Delete Product"
+      />
+
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)}
+        title="Product Limit Reached"
+        message={`You've reached your free trial limit of ${planData?.usage.maxProducts || 5} products.`}
       />
     </div>
   );

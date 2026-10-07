@@ -7,10 +7,12 @@ import { InvoiceSummary } from '@/components/billing/InvoiceSummary';
 import { QuickCustomerModal } from '@/components/billing/QuickCustomerModal';
 import { PrintableInvoice } from '@/components/invoices/PrintableInvoice';
 import { Modal } from '@/components/common/Modal';
+import { UpgradeModal } from '@/components/plan/UpgradeModal';
 import { InvoiceItem, PaymentStatus, Invoice } from '@/types';
 import { UserPlus, Receipt, AlertCircle, Save } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
 import { calculateTotals, calculateLineItem } from '@/features/invoices/utils/invoiceCalculations';
+import { usePlan } from '@/context/PlanContext';
 
 export const BillingPage: React.FC = () => {
   const { customers, products, addInvoice, generateInvoiceNumber, settings, showToast } = useAppState();
@@ -28,6 +30,10 @@ export const BillingPage: React.FC = () => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState(new Date().toISOString().split('T')[0]);
   const [paymentTerms, setPaymentTerms] = useState(settings.paymentTerms || 'Due on Receipt');
+
+  // Plan Limits
+  const { canCreateInvoice, planData } = usePlan();
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   // Helper to create an InvoiceItem from a product
   const createItemFromProduct = (prod?: (typeof products)[0], defaultQty = 1): InvoiceItem => {
@@ -219,6 +225,10 @@ export const BillingPage: React.FC = () => {
   };
 
   const handleSaveInvoice = async () => {
+    if (!canCreateInvoice) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
     if (!validateBeforeSave() || isSubmitting) return;
     setIsSubmitting(true);
     try {
@@ -232,6 +242,10 @@ export const BillingPage: React.FC = () => {
   };
 
   const handleSaveAndPrint = async () => {
+    if (!canCreateInvoice) {
+      setIsUpgradeModalOpen(true);
+      return;
+    }
     if (!validateBeforeSave() || isSubmitting) return;
     setIsSubmitting(true);
     try {
@@ -263,6 +277,15 @@ export const BillingPage: React.FC = () => {
           <span className="font-mono text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200">
             {invoiceNumber}
           </span>
+        }
+        actions={
+          <div className="flex items-center gap-2">
+            {!planData?.usage.isPro && planData?.usage.planName === 'trial' && (
+              <span className="text-xs font-semibold text-slate-500 mr-1 border border-slate-200 bg-white px-2.5 py-1 rounded-lg hidden sm:inline-block">
+                Free Trial &middot; <strong className="text-slate-800">{planData.usage.invoicesUsed}/{planData.usage.maxInvoices}</strong> Invoices
+              </span>
+            )}
+          </div>
         }
       />
 
@@ -460,6 +483,13 @@ export const BillingPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <UpgradeModal 
+        isOpen={isUpgradeModalOpen} 
+        onClose={() => setIsUpgradeModalOpen(false)}
+        title="Invoice Limit Reached"
+        message={`You've reached your free trial limit of ${planData?.usage.maxInvoices || 5} invoices.`}
+      />
     </div>
   );
 };

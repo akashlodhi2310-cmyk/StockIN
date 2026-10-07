@@ -63,8 +63,11 @@ export async function createAuditLog(entry: Omit<AuditLogEntry, 'id' | 'created_
   // 2. Persist to Supabase if table exists
   try {
     const supabase = getSupabaseAdmin();
+    const safeAdminId = (entry.admin_id && entry.admin_id !== '00000000-0000-0000-0000-000000000000')
+      ? entry.admin_id
+      : null;
     await supabase.from('audit_logs').insert([{
-      admin_id: entry.admin_id,
+      admin_id: safeAdminId,
       admin_email: entry.admin_email,
       action: entry.action,
       target_type: entry.target_type,

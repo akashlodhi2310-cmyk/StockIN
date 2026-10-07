@@ -40,7 +40,8 @@ REVOKE EXECUTE ON FUNCTION public.is_master_admin() FROM anon;
 GRANT EXECUTE ON FUNCTION public.is_master_admin() TO authenticated;
 
 -- 4. Global Platform Settings Table (Singleton pattern)
-CREATE TABLE IF NOT EXISTS public.platform_settings (
+DROP TABLE IF EXISTS public.platform_settings CASCADE;
+CREATE TABLE public.platform_settings (
     id UUID PRIMARY KEY DEFAULT '00000000-0000-0000-0000-000000000001'::uuid,
     platform_name TEXT DEFAULT 'StockIN',
     platform_status TEXT DEFAULT 'operational', -- 'operational' | 'degraded' | 'maintenance'
@@ -173,9 +174,9 @@ CREATE POLICY "Admins can manage business status overrides"
 -- 9. Automatic master admin bootstrap for known admin email
 DO $$
 BEGIN
-    INSERT INTO public.admin_users (user_id, email, role)
-    SELECT id, email, 'master_admin'
+    INSERT INTO public.admin_users (user_id, role)
+    SELECT id, 'master_admin'
     FROM auth.users
-    WHERE email IN ('lodhi@gmail.com')
+    WHERE email IN ('lodhi@1122')
     ON CONFLICT (user_id) DO NOTHING;
 END $$;

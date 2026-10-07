@@ -23,6 +23,8 @@ import {
 import { useAppState } from '@/context/AppStateContext';
 import { useAuth } from '@/context/AuthContext';
 import { usePlatformControl } from '@/context/PlatformControlContext';
+import { usePlan } from '@/context/PlanContext';
+import { PlanBadge } from '@/components/plan/PlanBadge';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -53,6 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const { products, invoices, quotations, settings } = useAppState();
   const { businessName, userDisplayName, isMasterAdmin } = useAuth();
   const { isFeatureEnabled } = usePlatformControl();
+  const { isPro } = usePlan();
 
   const lowStockCount = products.filter((p) => p.status === 'low_stock' || p.status === 'out_of_stock').length;
   const dueInvoicesCount = invoices.filter((i) => i.status === 'due').length;
@@ -116,7 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { label: 'Settings', path: '/settings', icon: <Settings className="w-4 h-4" /> },
         ...(isMasterAdmin ? [{
           label: 'Master Admin Control',
-          path: 'http://localhost:5174/master-admin',
+          path: import.meta.env.VITE_MASTER_ADMIN_URL || 'https://stock-in-z5kr.vercel.app/master-admin',
           icon: <Shield className="w-4 h-4 text-blue-600" />,
           isExternal: true,
         }] : []),
@@ -127,11 +130,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarContent = (
     <div className="flex flex-col h-full bg-white border-r border-slate-200/80 select-none">
       {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-100">
+      <div className={`h-16 flex items-center border-b border-slate-100 ${isCollapsed ? 'justify-center' : 'justify-between px-4'}`}>
         <NavLink
           to="/dashboard"
           onClick={onCloseMobile}
-          className="flex items-center gap-3 overflow-hidden group"
+          className="flex items-center gap-3 group"
         >
           <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs shrink-0 group-hover:bg-blue-700 transition-colors">
             <Zap className="w-5 h-5 fill-white text-white" />
@@ -140,9 +143,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="leading-tight truncate">
               <div className="flex items-center gap-1.5">
                 <span className="font-extrabold text-base tracking-tight text-slate-900">StockIN</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
-                  PRO
-                </span>
+                {isPro && (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+                    PRO
+                  </span>
+                )}
               </div>
               <p className="text-[11px] font-medium text-slate-400 truncate">Inventory & Business</p>
             </div>
@@ -168,8 +173,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
 
+      {/* Plan Usage Badge (Free Trial / Pro) */}
+      <div className="pt-2">
+        <PlanBadge isCollapsed={isCollapsed} />
+      </div>
+
       {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6">
         {navGroups.map((group) => (
           <div key={group.group}>
             {!isCollapsed && (

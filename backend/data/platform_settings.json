@@ -3,7 +3,7 @@
   "platform_name": "StockIN",
   "platform_status": "operational",
   "maintenance_mode": false,
-  "maintenance_message": "StockIN is undergoing emergency scheduled maintenance.",
+  "maintenance_message": "Platform is temporarily under maintenance. Please try again later.",
   "allow_new_registrations": true,
   "allow_business_registration": true,
   "allow_user_login": true,
@@ -14,8 +14,8 @@
   "notifications_enabled": true,
   "email_notifications_enabled": false,
   "system_alert_enabled": false,
-  "system_alert_message": "Global Maintenance Alert Test",
-  "system_alert_severity": "warning",
+  "system_alert_message": null,
+  "system_alert_severity": "info",
   "system_alert_start_time": null,
   "system_alert_end_time": null,
   "feature_flags": {
@@ -28,6 +28,12 @@
     "export": true
   },
   "session_timeout_minutes": 120,
-  "updated_at": "2026-10-06T16:56:08.503Z",
-  "updated_by": "889f4a0b-ac07-442d-8ef4-42ec14aa485d"
+  "updated_at": "2026-10-07T16:37:11.700043+00:00",
+  "updated_by": null,
+  "payment_upi_id": "",
+  "payment_qr_code_url": "",
+  "pro_price": 999,
+  "payment_instructions": "1. Scan the QR code with any UPI app.\n2. Complete the payment.\n3. Note your UTR/Reference number.\n4. Upload payment screenshot (optional).\n5. Submit for verification. Activation within 1 hour.",
+  "free_trial_product_limit": 5,
+  "free_trial_invoice_limit": 5
 }
