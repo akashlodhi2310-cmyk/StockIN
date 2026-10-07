@@ -51,15 +51,19 @@ export function createApp(): express.Application {
 
   // Public Health & Ping Routes
   app.use(API_PREFIX, healthRoutes);
+  app.use('/', healthRoutes);
 
   // Platform Policy & Client Config Routes (public)
   app.use(`${API_PREFIX}/platform`, platformRoutes);
+  app.use('/platform', platformRoutes);
 
   // Master Admin Protected Routes
   app.use(`${API_PREFIX}/admin`, adminRoutes);
+  app.use('/admin', adminRoutes);
 
   // User-facing Subscription & Payment Routes
   app.use(`${API_PREFIX}/subscription`, subscriptionRoutes);
+  app.use('/subscription', subscriptionRoutes);
 
   // Fallback 404
   app.use((_req: express.Request, res: express.Response) => {
