@@ -148,3 +148,4 @@ StockIN archives generated vector PDF invoices and quotations in a private **Sup
    - **Invoices**: Tax invoices. Creating an invoice decrements product stock and records `STOCK_OUT` audit trail movements.
    - **Conversion**: Converting a quotation to an invoice runs atomically via `convert_quotation_to_invoice_rpc` with duplicate conversion protection.
 4. **Decoupled Supabase Storage**: Private storage is exclusively for document archiving. A network or storage failure never rolls back invoices or inventory changes; failed uploads can be retried safely.
+# StockIN
